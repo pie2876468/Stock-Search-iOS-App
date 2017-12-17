@@ -1,0 +1,1424 @@
+<html>
+<head>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+    <div id='containerChart' style=' max-width: 1000px; max-height: 1000px; margin: 0 auto;'></div>
+
+<script>
+//Begin(0,'AAPL');
+var chartNum;
+var chartOpt = [];
+var FBstring =""
+var date0 ="";
+var title ="";
+var ylastPrice;
+var yChange;
+var yChange1;//number
+var yChange2;//percent
+var yTimestamp;
+var yOpen;
+var yClose;
+var yRange;
+var yVolume;//string form
+var yVolume2;//number form
+var xxDate = [];
+var xxDate0 = [];
+var xxDate1 = [];
+var xxDate2 = [];
+var xxDate3 = [];
+var xxDate4 = [];
+var xxDate5 = [];
+var xxDate6 = [];
+var xxDate7 = [];
+var xxDate8 = [];
+var yySMA = [];
+var yyEMA = [];
+var yySTOCH1 = [];
+var yySTOCH2 = [];
+var yyRSI = [];
+var yyADX = [];
+var yyCCI = [];
+var yyBBANDS1 = [];
+var yyBBANDS2 = [];
+var yyBBANDS3 = [];
+var yyMACD1 = [];
+var yyMACD2 = [];
+var yyMACD3 = [];
+var yyPrice = [];
+var yyVolume = [];
+var yyHistoricalPrice = [];
+var yyAuthor = [];
+var yyDate = [];
+var yyLink = [];
+var yyTitle = [];
+
+
+function Begin(IndicatorIdx,TargetSymbol) {
+  chartNum = IndicatorIdx
+  GetData(IndicatorIdx,TargetSymbol)
+}
+function GetFBurl() {
+  return FBstring;
+}
+
+function test(testInput) {
+    return "AA";
+}
+
+function GetData(IndicatorIdx,TargetSymbol) {
+  title = TargetSymbol;
+  if(IndicatorIdx==0) {
+    $.ajax({
+        type: "GET",
+        url: "http://ec2-52-53-233-237.us-west-1.compute.amazonaws.com?inSymbol="+TargetSymbol+"&idx=stocktInfo0",
+        dataType: "json",
+        success: function(data) {
+            if (data.msg) {
+            }
+            else {
+              generateData_Price(data);
+              if(yyPrice.length!=0) StockPrice(xxDate0,yyPrice,yyVolume);
+              GetHighchartUrl();
+            }
+        },
+        error: function(jqXHR) {
+        }
+    })
+  }
+  if(IndicatorIdx==1) {
+    $.ajax({
+        type: "GET",
+        url: "http://ec2-52-53-233-237.us-west-1.compute.amazonaws.com?inSymbol="+TargetSymbol+"&idx=SMA",
+        dataType: "json",
+        success: function(data) {
+            if (data.msg) {
+            }
+            else {
+              generateData_SMA(data);
+              if(yySMA.length!=0) SMA(xxDate1,yySMA);
+              GetHighchartUrl();
+            }
+        },
+        error: function(jqXHR) {
+        }
+    })
+  }
+  if(IndicatorIdx==2) {
+    $.ajax({
+        type: "GET",
+        url: "http://ec2-52-53-233-237.us-west-1.compute.amazonaws.com?inSymbol="+TargetSymbol+"&idx=EMA",
+        dataType: "json",
+        success: function(data) {
+            if (data.msg) {
+            }
+            else {
+              generateData_EMA(data);
+              if(yyEMA.length!=0) EMA(xxDate2,yyEMA);
+              GetHighchartUrl();
+            }
+        },
+        error: function(jqXHR) {
+        }
+    })
+  }
+  if(IndicatorIdx==3) {
+    $.ajax({
+        type: "GET",
+        url: "http://ec2-52-53-233-237.us-west-1.compute.amazonaws.com?inSymbol="+TargetSymbol+"&idx=STOCH",
+        dataType: "json",
+        success: function(data) {
+            if (data.msg) {
+            }
+            else {
+              generateData_STOCH(data);
+              if(yySTOCH1.length!=0) STOCH(xxDate3,yySTOCH1,yySTOCH2);
+              GetHighchartUrl();
+            }
+        },
+        error: function(jqXHR) {
+        }
+    })
+  }
+  if(IndicatorIdx==4) {
+    $.ajax({
+        type: "GET",
+        url: "http://ec2-52-53-233-237.us-west-1.compute.amazonaws.com?inSymbol="+TargetSymbol+"&idx=RSI",
+        dataType: "json",
+        success: function(data) {
+            if (data.msg) {
+            }
+            else {
+              generateData_RSI(data);
+              if(yyRSI.length!=0) RSI(xxDate4,yyRSI);
+              GetHighchartUrl();
+            }
+        },
+        error: function(jqXHR) {
+        }
+    })
+  }
+  if(IndicatorIdx==5) {
+    $.ajax({
+        type: "GET",
+        url: "http://ec2-52-53-233-237.us-west-1.compute.amazonaws.com?inSymbol="+TargetSymbol+"&idx=ADX",
+        dataType: "json",
+        success: function(data) {
+            if (data.msg) {
+            }
+            else {
+              generateData_ADX(data);
+              if(yyADX.length!=0) ADX(xxDate5,yyADX);
+              GetHighchartUrl();
+            }
+        },
+        error: function(jqXHR) {
+        }
+    })
+  }
+  if(IndicatorIdx==6) {
+    $.ajax({
+        type: "GET",
+        url: "http://ec2-52-53-233-237.us-west-1.compute.amazonaws.com?inSymbol="+TargetSymbol+"&idx=CCI",
+        dataType: "json",
+        success: function(data) {
+            if (data.msg) {
+            }
+            else {
+              generateData_CCI(data);
+              if(yyCCI.length!=0) CCI(xxDate6,yyCCI);
+              GetHighchartUrl();
+            }
+        },
+        error: function(jqXHR) {
+        }
+    })
+  }
+  if(IndicatorIdx==7) {
+    $.ajax({
+        type: "GET",
+        url: "http://ec2-52-53-233-237.us-west-1.compute.amazonaws.com?inSymbol="+TargetSymbol+"&idx=BBANDS",
+        dataType: "json",
+        success: function(data) {
+            if (data.msg) {
+            }
+            else {
+              generateData_BBANDS(data);
+              if(yyBBANDS1.length!=0) BBANDS(xxDate7,yyBBANDS1,yyBBANDS2,yyBBANDS3);
+              GetHighchartUrl();
+            }
+        },
+        error: function(jqXHR) {
+        }
+    })
+  }
+  if(IndicatorIdx==8) {
+    $.ajax({
+        type: "GET",
+        url: "http://ec2-52-53-233-237.us-west-1.compute.amazonaws.com?inSymbol="+TargetSymbol+"&idx=MACD",
+        dataType: "json",
+        success: function(data) {
+            if (data.msg) {
+            }
+            else {
+              generateData_MACD(data);
+              if(yyMACD1.length!=0) MACD(xxDate8,yyMACD1,yyMACD2,yyMACD3);
+              GetHighchartUrl();
+            }
+        },
+        error: function(jqXHR) {
+        }
+    })
+  }
+}
+
+
+function generateData_Price(data) {
+  if(typeof data["InfoTable"] !='undefined'
+  && typeof data["InfoTable"]["Meta Data"] !='undefined'
+  && typeof data["InfoTable"]["Meta Data"]["2. Symbol"] !='undefined'
+  && typeof data["InfoTable"]["Time Series (Daily)"] !='undefined') {
+    var ii = 0;
+    date0 = data["InfoTable"]["Meta Data"]["2. Symbol"];
+    for(var Target in data["InfoTable"]["Time Series (Daily)"]) {
+      tmp = Target;
+      if(ii<130) {
+        xxDate0.push(String(tmp).substr(5,2)+'/'+String(tmp).substr(8,2));
+        if(typeof data["InfoTable"]["Time Series (Daily)"][Target] !='undefined'
+        && typeof data["InfoTable"]["Time Series (Daily)"][Target]["4. close"] !='undefined'
+        && typeof data["InfoTable"]["Time Series (Daily)"][Target]["5. volume"] !='undefined') {
+          yyPrice.push(parseFloat(data["InfoTable"]["Time Series (Daily)"][Target]["4. close"]));
+          yyVolume.push(parseFloat(data["InfoTable"]["Time Series (Daily)"][Target]["5. volume"]));
+        }
+        else {
+        }
+      }
+      ii++;
+      if(ii>130) break;
+    }
+    xxDate0.reverse();
+    yyPrice.reverse();
+    yyVolume.reverse();
+  }
+  else {
+  }
+}
+
+function generateData_SMA(data) {
+  if(typeof data["SMA"] !='undefined'
+  && typeof data["SMA"]["Technical Analysis: SMA"] !='undefined') {
+    var ii = 0;
+    for(var Target in data["SMA"]["Technical Analysis: SMA"]) {
+      tmp = Target;
+      if(ii<130) {
+        xxDate1.push(String(tmp).substr(5,2)+'/'+String(tmp).substr(8,2));
+        if(typeof data["SMA"]["Technical Analysis: SMA"][Target] !='undefined'
+        && typeof data["SMA"]["Technical Analysis: SMA"][Target]["SMA"] !='undefined') {
+          yySMA.push(parseFloat(data["SMA"]["Technical Analysis: SMA"][Target]["SMA"]));
+        }
+        else {
+        }
+      }
+      ii++;
+      if(ii>130) break;
+    }
+    xxDate1.reverse();
+    yySMA.reverse();
+  }
+  else {
+  }
+}
+
+function generateData_EMA(data) {
+  if(typeof data["EMA"] !='undefined'
+  && typeof data["EMA"]["Technical Analysis: EMA"] !='undefined') {
+    var ii = 0;
+    for(var Target in data["EMA"]["Technical Analysis: EMA"]) {
+      tmp = Target;
+      if(ii<130) {
+        if(typeof data["EMA"]["Technical Analysis: EMA"][Target] !='undefined'
+        && typeof data["EMA"]["Technical Analysis: EMA"][Target]["EMA"] !='undefined') {
+          xxDate2.push(String(tmp).substr(5,2)+'/'+String(tmp).substr(8,2));
+          yyEMA.push(parseFloat(data["EMA"]["Technical Analysis: EMA"][Target]["EMA"]));
+        }
+        else {
+        }
+      }
+      ii++;
+      if(ii>130) break;
+    }
+    xxDate2.reverse();
+    yyEMA.reverse();
+  }
+  else {
+  }
+}
+
+function generateData_STOCH(data) {
+  if(typeof data["STOCH"] !='undefined'
+  && typeof data["STOCH"]["Technical Analysis: STOCH"] !='undefined') {
+    var ii = 0;
+    for(var Target in data["STOCH"]["Technical Analysis: STOCH"]) {
+      tmp = Target;
+      if(ii<130) {
+        xxDate3.push(String(tmp).substr(5,2)+'/'+String(tmp).substr(8,2));
+        if(typeof data["STOCH"]["Technical Analysis: STOCH"][Target] !='undefined'
+        && typeof data["STOCH"]["Technical Analysis: STOCH"][Target]["SlowK"] !='undefined'
+        && typeof data["STOCH"]["Technical Analysis: STOCH"][Target]["SlowD"] !='undefined') {
+          yySTOCH1.push(parseFloat(data["STOCH"]["Technical Analysis: STOCH"][Target]["SlowK"]));
+          yySTOCH2.push(parseFloat(data["STOCH"]["Technical Analysis: STOCH"][Target]["SlowD"]));
+        }
+        else {
+        }
+      }
+      ii++;
+      if(ii>130) break;
+    }
+    xxDate3.reverse();
+    yySTOCH1.reverse();
+    yySTOCH2.reverse();
+  }
+  else {
+  }
+}
+
+function generateData_RSI(data) {
+  if(typeof data["RSI"] !='undefined'
+  && typeof data["RSI"]["Technical Analysis: RSI"] !='undefined') {
+    var ii = 0;
+    for(var Target in data["RSI"]["Technical Analysis: RSI"]) {
+      tmp = Target;
+      if(ii<130) {
+        xxDate4.push(String(tmp).substr(5,2)+'/'+String(tmp).substr(8,2));
+        if(typeof data["RSI"]["Technical Analysis: RSI"][Target] !='undefined'
+        && typeof data["RSI"]["Technical Analysis: RSI"][Target]["RSI"] !='undefined') {
+          yyRSI.push(parseFloat(data["RSI"]["Technical Analysis: RSI"][Target]["RSI"]));
+        }
+        else {
+        }
+      }
+      ii++;
+      if(ii>130) break;
+    }
+    xxDate4.reverse();
+    yyRSI.reverse();
+  }
+  else {
+  }
+}
+
+function generateData_ADX(data) {
+  if(typeof data["ADX"] !='undefined'
+  && typeof data["ADX"]["Technical Analysis: ADX"] !='undefined') {
+    var ii = 0;
+    for(var Target in data["ADX"]["Technical Analysis: ADX"]) {
+      tmp = Target;
+      if(ii<130) {
+        xxDate5.push(String(tmp).substr(5,2)+'/'+String(tmp).substr(8,2));
+        if(typeof data["ADX"]["Technical Analysis: ADX"][Target] !='undefined'
+        && typeof data["ADX"]["Technical Analysis: ADX"][Target]["ADX"] !='undefined') {
+          yyADX.push(parseFloat(data["ADX"]["Technical Analysis: ADX"][Target]["ADX"]));
+        }
+        else {
+        }
+      }
+      ii++;
+      if(ii>130) break;
+    }
+    xxDate5.reverse();
+    yyADX.reverse();
+  }
+  else {
+  }
+}
+
+function generateData_CCI(data) {
+  if(typeof data["CCI"] !='undefined'
+  && typeof data["CCI"]["Technical Analysis: CCI"] !='undefined') {
+    var ii = 0;
+    for(var Target in data["CCI"]["Technical Analysis: CCI"]) {
+      tmp = Target;
+      if(ii<130) {
+        xxDate6.push(String(tmp).substr(5,2)+'/'+String(tmp).substr(8,2));
+        if(typeof data["CCI"]["Technical Analysis: CCI"][Target] !='undefined'
+        && typeof data["CCI"]["Technical Analysis: CCI"][Target]["CCI"] !='undefined') {
+          yyCCI.push(parseFloat(data["CCI"]["Technical Analysis: CCI"][Target]["CCI"]));
+        }
+        else {
+        }
+      }
+      ii++;
+      if(ii>130) break;
+    }
+    xxDate6.reverse();
+    yyCCI.reverse();
+  }
+  else {
+  }
+}
+
+function generateData_BBANDS(data) {
+  if(typeof data["BBANDS"] !='undefined'
+  && typeof data["BBANDS"]["Technical Analysis: BBANDS"] !='undefined') {
+    var ii = 0;
+    for(var Target in data["BBANDS"]["Technical Analysis: BBANDS"]) {
+      tmp = Target;
+      if(ii<130) {
+        xxDate7.push(String(tmp).substr(5,2)+'/'+String(tmp).substr(8,2));
+        if(typeof data["BBANDS"]["Technical Analysis: BBANDS"][Target] !='undefined'
+        && typeof data["BBANDS"]["Technical Analysis: BBANDS"][Target]["Real Upper Band"] !='undefined'
+        && typeof data["BBANDS"]["Technical Analysis: BBANDS"][Target]["Real Middle Band"] !='undefined'
+        && typeof data["BBANDS"]["Technical Analysis: BBANDS"][Target]["Real Lower Band"] !='undefined') {
+          yyBBANDS1.push(parseFloat(data["BBANDS"]["Technical Analysis: BBANDS"][Target]["Real Upper Band"]));
+          yyBBANDS2.push(parseFloat(data["BBANDS"]["Technical Analysis: BBANDS"][Target]["Real Middle Band"]));
+          yyBBANDS3.push(parseFloat(data["BBANDS"]["Technical Analysis: BBANDS"][Target]["Real Lower Band"]));
+        }
+        else {
+        }
+      }
+      ii++;
+      if(ii>130) break;
+    }
+    xxDate7.reverse();
+    yyBBANDS1.reverse();
+    yyBBANDS2.reverse();
+    yyBBANDS3.reverse();
+  }
+  else {
+  }
+}
+
+function generateData_MACD(data) {
+  if(typeof data["MACD"] !='undefined'
+  && typeof data["MACD"]["Technical Analysis: MACD"] !='undefined') {
+    var ii = 0;
+    for(var Target in data["MACD"]["Technical Analysis: MACD"]) {
+      tmp = Target;
+      if(ii<130) {
+        xxDate8.push(String(tmp).substr(5,2)+'/'+String(tmp).substr(8,2));
+        if(typeof data["MACD"]["Technical Analysis: MACD"][Target] !='undefined'
+        && typeof data["MACD"]["Technical Analysis: MACD"][Target]["MACD"] !='undefined'
+        && typeof data["MACD"]["Technical Analysis: MACD"][Target]["MACD_Hist"] !='undefined'
+        && typeof data["MACD"]["Technical Analysis: MACD"][Target]["MACD_Signal"] !='undefined') {
+          yyMACD1.push(parseFloat(data["MACD"]["Technical Analysis: MACD"][Target]["MACD"]));
+          yyMACD2.push(parseFloat(data["MACD"]["Technical Analysis: MACD"][Target]["MACD_Hist"]));
+          yyMACD3.push(parseFloat(data["MACD"]["Technical Analysis: MACD"][Target]["MACD_Signal"]));
+        }
+        else {
+        }
+      }
+      ii++;
+      if(ii>130) break;
+    }
+    xxDate8.reverse();
+    yyMACD1.reverse();
+    yyMACD2.reverse();
+    yyMACD3.reverse();
+  }
+  else {
+  }
+}
+
+function SMA(xx,yy){
+  Highcharts.chart('containerChart', {
+    chart: {
+        type: 'line',
+        zoomType: 'x'
+    },
+    title: {
+        text: 'Simple Moving Average (SMA)'
+    },
+    subtitle: {
+        text: 'Source: <a href="http://www.alphavantage.co/" target="_blank"> Alpha Vantage</a>',
+        style: {
+          color: '#0000FF'
+        }
+    },
+    xAxis: {
+          categories: xx,
+          tickInterval: 5
+    },
+    yAxis: {
+        title: {
+            text: 'SMA'
+        },
+    },
+    legend: {
+      layout: 'horizontal',
+      align: 'center',
+      verticalAlign: 'bottom'
+    },
+    plotOptions: {
+        series: {
+            marker: {
+                enabled: true
+            }
+        }
+    },
+    series: [{
+      name: title,
+      data: yy,
+      color: '#FF0000',
+      marker:{symbol : 'square',radius : 3 }
+    }]
+  });
+  chartOpt[1] = JSON.stringify({
+    chart: {
+        type: 'line',
+        zoomType: 'x'
+    },
+    title: {
+        text: 'Simple Moving Average (SMA)'
+    },
+    subtitle: {
+        text: 'Source: <a href="http://www.alphavantage.co/" target="_blank"> Alpha Vantage</a>',
+        style: {
+          color: '#0000FF'
+        }
+    },
+    xAxis: {
+          categories: xx,
+          tickInterval: 5
+    },
+    yAxis: {
+        title: {
+            text: 'SMA'
+        },
+    },
+    legend: {
+      layout: 'horizontal',
+      align: 'center',
+      verticalAlign: 'bottom'
+    },
+    plotOptions: {
+        series: {
+            marker: {
+                enabled: true
+            }
+        }
+    },
+    series: [{
+      name: title,
+      data: yy,
+      color: '#FF0000',
+      marker:{symbol : 'square',radius : 3 }
+    }]
+  });
+}
+function EMA(xx,yy){
+  Highcharts.chart('containerChart', {
+    chart: {
+        type: 'line',
+        zoomType: 'x'
+    },
+    title: {
+        text: 'Exponential Moving Average (EMA)'
+    },
+    subtitle: {
+        text: 'Source: <a href="http://www.alphavantage.co/" target="_blank"> Alpha Vantage</a>',
+        style: {
+          color: '#0000FF'
+        }
+    },
+    xAxis: {
+          categories: xx,
+          tickInterval: 5
+    },
+    yAxis: {
+        title: {
+            text: 'EMA'
+        },
+    },
+    legend: {
+      layout: 'horizontal',
+      align: 'center',
+      verticalAlign: 'bottom'
+    },
+    plotOptions: {
+        series: {
+            marker: {
+                enabled: true
+            }
+        }
+    },
+    series: [{
+      name: title,
+      data: yy,
+      color: '#FF0000',
+      marker:{symbol : 'square',radius : 3 }
+    }]
+  });
+  chartOpt[2] = JSON.stringify({
+    chart: {
+        type: 'line',
+        zoomType: 'x'
+    },
+    title: {
+        text: 'Exponential Moving Average (EMA)'
+    },
+    subtitle: {
+        text: 'Source: <a href="http://www.alphavantage.co/" target="_blank"> Alpha Vantage</a>',
+        style: {
+          color: '#0000FF'
+        }
+    },
+    xAxis: {
+          categories: xx,
+          tickInterval: 5
+    },
+    yAxis: {
+        title: {
+            text: 'EMA'
+        },
+    },
+    legend: {
+      layout: 'horizontal',
+      align: 'center',
+      verticalAlign: 'bottom'
+    },
+    plotOptions: {
+        series: {
+            marker: {
+                enabled: true
+            }
+        }
+    },
+    series: [{
+      name: title,
+      data: yy,
+      color: '#FF0000',
+      marker:{symbol : 'square',radius : 3 }
+    }]
+  });
+}
+function STOCH(xx,yy,yy2){
+  Highcharts.chart('containerChart', {
+    chart: {
+        type: 'line',
+        zoomType: 'x'
+    },
+    title: {
+        text: 'Stochastic Oscillator (STOCH)'
+    },
+    subtitle: {
+        text: 'Source: <a href="http://www.alphavantage.co/" target="_blank"> Alpha Vantage</a>',
+        style: {
+          color: '#0000FF'
+        }
+    },
+    xAxis: {
+          categories: xx,
+          tickInterval: 5
+    },
+    yAxis: {
+        title: {
+            text: 'STOCH'
+        },
+    },
+    legend: {
+      layout: 'horizontal',
+      align: 'center',
+      verticalAlign: 'bottom'
+    },
+    plotOptions: {
+        series: {
+            marker: {
+                enabled: true
+            }
+        }
+    },
+    series: [{
+      name: title+' SlowK',
+      data: yy,
+      color: '#FF0000',
+      marker:{symbol : 'square',radius : 3 }
+    },
+    {
+      name: title+' SlowD',
+      data: yy2,
+      color: '#00FF00',
+      marker:{symbol : 'square',radius : 3 }
+    }]
+  });
+  chartOpt[3] = JSON.stringify({
+    chart: {
+        type: 'line',
+        zoomType: 'x'
+    },
+    title: {
+        text: 'Stochastic Oscillator (STOCH)'
+    },
+    subtitle: {
+        text: 'Source: <a href="http://www.alphavantage.co/" target="_blank"> Alpha Vantage</a>',
+        style: {
+          color: '#0000FF'
+        }
+    },
+    xAxis: {
+          categories: xx,
+          tickInterval: 5
+    },
+    yAxis: {
+        title: {
+            text: 'STOCH'
+        },
+    },
+    legend: {
+      layout: 'horizontal',
+      align: 'center',
+      verticalAlign: 'bottom'
+    },
+    plotOptions: {
+        series: {
+            marker: {
+                enabled: true
+            }
+        }
+    },
+    series: [{
+      name: title+' SlowK',
+      data: yy,
+      color: '#FF0000',
+      marker:{symbol : 'square',radius : 3 }
+    },
+    {
+      name: title+' SlowD',
+      data: yy2,
+      color: '#00FF00',
+      marker:{symbol : 'square',radius : 3 }
+    }]
+  });
+}
+function RSI(xx,yy){
+  Highcharts.chart('containerChart', {
+    chart: {
+        type: 'line',
+        zoomType: 'x'
+    },
+    title: {
+        text: 'Relative Strength Indicator (RSI)'
+    },
+    subtitle: {
+        text: 'Source: <a href="http://www.alphavantage.co/" target="_blank"> Alpha Vantage</a>',
+        style: {
+          color: '#0000FF'
+        }
+    },
+    xAxis: {
+          categories: xx,
+          tickInterval: 5
+    },
+    yAxis: {
+        title: {
+            text: 'RSI'
+        },
+    },
+    legend: {
+      layout: 'horizontal',
+      align: 'center',
+      verticalAlign: 'bottom'
+    },
+    plotOptions: {
+        series: {
+            marker: {
+                enabled: true
+            }
+        }
+    },
+    series: [{
+      name: title,
+      data: yy,
+      color: '#FF0000',
+      marker:{symbol : 'square',radius : 3 }
+    }]
+  });
+  chartOpt[4] = JSON.stringify({
+    chart: {
+        type: 'line',
+        zoomType: 'x'
+    },
+    title: {
+        text: 'Relative Strength Indicator (RSI)'
+    },
+    subtitle: {
+        text: 'Source: <a href="http://www.alphavantage.co/" target="_blank"> Alpha Vantage</a>',
+        style: {
+          color: '#0000FF'
+        }
+    },
+    xAxis: {
+          categories: xx,
+          tickInterval: 5
+    },
+    yAxis: {
+        title: {
+            text: 'RSI'
+        },
+    },
+    legend: {
+      layout: 'horizontal',
+      align: 'center',
+      verticalAlign: 'bottom'
+    },
+    plotOptions: {
+        series: {
+            marker: {
+                enabled: true
+            }
+        }
+    },
+    series: [{
+      name: title,
+      data: yy,
+      color: '#FF0000',
+      marker:{symbol : 'square',radius : 3 }
+    }]
+  });
+}
+function ADX(xx,yy){
+  Highcharts.chart('containerChart', {
+    chart: {
+        type: 'line',
+        zoomType: 'x'
+    },
+    title: {
+        text: 'Average Directional Index (ADX)'
+    },
+    subtitle: {
+        text: 'Source: <a href="http://www.alphavantage.co/" target="_blank"> Alpha Vantage</a>',
+        style: {
+          color: '#0000FF'
+        }
+    },
+    xAxis: {
+          categories: xx,
+          tickInterval: 5
+    },
+    yAxis: {
+        title: {
+            text: 'ADX'
+        },
+    },
+    legend: {
+      layout: 'horizontal',
+      align: 'center',
+      verticalAlign: 'bottom'
+    },
+    plotOptions: {
+        series: {
+            marker: {
+                enabled: true
+            }
+        }
+    },
+    series: [{
+      name: title,
+      data: yy,
+      color: '#FF0000',
+      marker:{symbol : 'square',radius : 3 }
+    }]
+  });
+  chartOpt[5] = JSON.stringify({
+    chart: {
+        type: 'line',
+        zoomType: 'x'
+    },
+    title: {
+        text: 'Average Directional Index (ADX)'
+    },
+    subtitle: {
+        text: 'Source: <a href="http://www.alphavantage.co/" target="_blank"> Alpha Vantage</a>',
+        style: {
+          color: '#0000FF'
+        }
+    },
+    xAxis: {
+          categories: xx,
+          tickInterval: 5
+    },
+    yAxis: {
+        title: {
+            text: 'ADX'
+        },
+    },
+    legend: {
+      layout: 'horizontal',
+      align: 'center',
+      verticalAlign: 'bottom'
+    },
+    plotOptions: {
+        series: {
+            marker: {
+                enabled: true
+            }
+        }
+    },
+    series: [{
+      name: title,
+      data: yy,
+      color: '#FF0000',
+      marker:{symbol : 'square',radius : 3 }
+    }]
+  });
+}
+function CCI(xx,yy){
+  Highcharts.chart('containerChart', {
+    chart: {
+        type: 'line',
+        zoomType: 'x'
+    },
+    title: {
+        text: 'Commodity Channel Index (CCI)'
+    },
+    subtitle: {
+        text: 'Source: <a href="http://www.alphavantage.co/" target="_blank"> Alpha Vantage</a>',
+        style: {
+          color: '#0000FF'
+        }
+    },
+    xAxis: {
+          categories: xx,
+          tickInterval: 5
+    },
+    yAxis: {
+        title: {
+            text: 'CCI'
+        },
+    },
+    legend: {
+      layout: 'horizontal',
+      align: 'center',
+      verticalAlign: 'bottom'
+    },
+    plotOptions: {
+        series: {
+            marker: {
+                enabled: true
+            }
+        }
+    },
+    series: [{
+      name: title,
+      data: yy,
+      color: '#FF0000',
+      marker:{symbol : 'square',radius : 3 }
+    }]
+  });
+  chartOpt[6] = JSON.stringify({
+    chart: {
+        type: 'line',
+        zoomType: 'x'
+    },
+    title: {
+        text: 'Commodity Channel Index (CCI)'
+    },
+    subtitle: {
+        text: 'Source: <a href="http://www.alphavantage.co/" target="_blank"> Alpha Vantage</a>',
+        style: {
+          color: '#0000FF'
+        }
+    },
+    xAxis: {
+          categories: xx,
+          tickInterval: 5
+    },
+    yAxis: {
+        title: {
+            text: 'CCI'
+        },
+    },
+    legend: {
+      layout: 'horizontal',
+      align: 'center',
+      verticalAlign: 'bottom'
+    },
+    plotOptions: {
+        series: {
+            marker: {
+                enabled: true
+            }
+        }
+    },
+    series: [{
+      name: title,
+      data: yy,
+      color: '#FF0000',
+      marker:{symbol : 'square',radius : 3 }
+    }]
+  });
+}
+function BBANDS(xx,yy,yy2,yy3){
+  Highcharts.chart('containerChart', {
+    chart: {
+        type: 'line',
+        zoomType: 'x'
+    },
+    title: {
+        text: 'Bollinger Band (BBANDS)'
+    },
+    subtitle: {
+        text: 'Source: <a href="http://www.alphavantage.co/" target="_blank"> Alpha Vantage</a>',
+        style: {
+          color: '#0000FF'
+        }
+    },
+    xAxis: {
+          categories: xx,
+          tickInterval: 5
+    },
+    yAxis: {
+        title: {
+            text: 'BBANDS'
+        },
+    },
+    legend: {
+      layout: 'horizontal',
+      align: 'center',
+      verticalAlign: 'bottom'
+    },
+    plotOptions: {
+        series: {
+            marker: {
+                enabled: true
+            }
+        }
+    },
+    series: [{
+      name: title+' Real Upper Band',
+      data: yy,
+      color: '#000000',
+      marker:{symbol : 'square',radius : 3 }
+    },
+    {
+      name: title+' Real Lower Band',
+      data: yy3,
+      color: '#00FF00',
+      marker:{symbol : 'square',radius : 3 }
+    },
+    {
+      name: title+' Real Middle Band',
+      data: yy2,
+      color: '#FF0000',
+      marker:{symbol : 'square',radius : 3 }
+    }]
+  });
+  chartOpt[7] = JSON.stringify({
+    chart: {
+        type: 'line',
+        zoomType: 'x'
+    },
+    title: {
+        text: 'Bollinger Band (BBANDS)'
+    },
+    subtitle: {
+        text: 'Source: <a href="http://www.alphavantage.co/" target="_blank"> Alpha Vantage</a>',
+        style: {
+          color: '#0000FF'
+        }
+    },
+    xAxis: {
+          categories: xx,
+          tickInterval: 5
+    },
+    yAxis: {
+        title: {
+            text: 'BBANDS'
+        },
+    },
+    legend: {
+      layout: 'horizontal',
+      align: 'center',
+      verticalAlign: 'bottom'
+    },
+    plotOptions: {
+        series: {
+            marker: {
+                enabled: true
+            }
+        }
+    },
+    series: [{
+      name: title+' Real Upper Band',
+      data: yy,
+      color: '#000000',
+      marker:{symbol : 'square',radius : 3 }
+    },
+    {
+      name: title+' Real Lower Band',
+      data: yy3,
+      color: '#00FF00',
+      marker:{symbol : 'square',radius : 3 }
+    },
+    {
+      name: title+' Real Middle Band',
+      data: yy2,
+      color: '#FF0000',
+      marker:{symbol : 'square',radius : 3 }
+    }]
+  });
+}
+function MACD(xx,yy,yy2,yy3){
+  Highcharts.chart('containerChart', {
+    chart: {
+        type: 'line',
+        zoomType: 'x'
+    },
+    title: {
+        text: 'Moving Average Convergence/Divergence (MACD)'
+    },
+    subtitle: {
+        text: 'Source: <a href="http://www.alphavantage.co/" target="_blank"> Alpha Vantage</a>',
+        style: {
+          color: '#0000FF'
+        }
+    },
+    xAxis: {
+          categories: xx,
+          tickInterval: 5
+    },
+    yAxis: {
+        title: {
+            text: 'MACD'
+        },
+    },
+    legend: {
+      layout: 'horizontal',
+      align: 'center',
+      verticalAlign: 'bottom'
+    },
+    plotOptions: {
+        series: {
+            marker: {
+                enabled: true
+            }
+        }
+    },
+    series: [{
+      name: title+' MACD',
+      data: yy,
+      color: '#FF0000',
+      marker:{symbol : 'square',radius : 3 }
+    },
+    {
+      name: title+' MACD_Hist',
+      data: yy2,
+      color: '#CFAC80',
+      marker:{symbol : 'square',radius : 3 }
+    },
+    {
+      name: title+' MACD_Signal',
+      data: yy3,
+      color: '#000000',
+      marker:{symbol : 'square',radius : 3 }
+    }]
+  });
+  chartOpt[8] = JSON.stringify({
+    chart: {
+        type: 'line',
+        zoomType: 'x'
+    },
+    title: {
+        text: 'Moving Average Convergence/Divergence (MACD)'
+    },
+    subtitle: {
+        text: 'Source: <a href="http://www.alphavantage.co/" target="_blank"> Alpha Vantage</a>',
+        style: {
+          color: '#0000FF'
+        }
+    },
+    xAxis: {
+          categories: xx,
+          tickInterval: 5
+    },
+    yAxis: {
+        title: {
+            text: 'MACD'
+        },
+    },
+    legend: {
+      layout: 'horizontal',
+      align: 'center',
+      verticalAlign: 'bottom'
+    },
+    plotOptions: {
+        series: {
+            marker: {
+                enabled: true
+            }
+        }
+    },
+    series: [{
+      name: title+' MACD',
+      data: yy,
+      color: '#FF0000',
+      marker:{symbol : 'square',radius : 3 }
+    },
+    {
+      name: title+' MACD_Hist',
+      data: yy2,
+      color: '#CFAC80',
+      marker:{symbol : 'square',radius : 3 }
+    },
+    {
+      name: title+' MACD_Signal',
+      data: yy3,
+      color: '#000000',
+      marker:{symbol : 'square',radius : 3 }
+    }]
+  });
+}
+function StockPrice(xx,yy,yy2){
+  Highcharts.chart('containerChart', {
+    chart: {
+        type: 'column',
+        zoomType: 'x'
+    },
+    title: {
+        text: date0 +' Stock Price and Volume'
+    },
+    subtitle: {
+        text: 'Source: <a href="http://www.alphavantage.co/" target="_blank"> Alpha Vantage</a>',
+        style: {
+          color: '#0000FF'
+        }
+    },
+    xAxis: {
+          categories: xx,
+          tickInterval: 5
+    },
+    yAxis: [{
+        title: {
+            text: 'Stock Price'
+        },
+        min: 0,
+    },
+    {
+        floor: 0,
+        title: {
+            text: 'Volume'
+        },
+        labels: {
+            format: '{value} M',
+            formatter: function() {
+              return this.value/1000000 + 'M';
+            }
+        },
+        opposite: true
+    }
+    ],
+    legend: {
+      layout: 'horizontal',
+      align: 'center',
+      verticalAlign: 'bottom'
+    },
+    plotOptions: {
+        area: {
+            fillColor: {
+                linearGradient: {
+                    x1: 0,
+                    y1: 0,
+                    x2: 0,
+                    y2: 1
+                },
+                stops: [
+                    [0, Highcharts.Color('#0000ff').setOpacity(0.3).get('rgba')],
+                    [1, Highcharts.Color('#0000ff').setOpacity(0.3).get('rgba')]
+                ]
+            },
+            marker: {
+                radius: 0
+            },
+            lineWidth: 2,
+            states: {
+                hover: {
+                    lineWidth: 1
+                }
+            },
+            threshold: null
+        }
+    },
+    series: [{
+      type: 'area',
+      name: 'Price',
+      data: yy,
+      color: '#0000ff'
+    },
+    {
+      type: 'column',
+      name: 'Volume',
+      yAxis: 1,
+      data: yy2,
+      color: '#ff0000'
+    }]
+  });
+  chartOpt[0] = JSON.stringify({
+    chart: {
+        type: 'column',
+        zoomType: 'x'
+    },
+    title: {
+        text: date0 +' Stock Price and Volume'
+    },
+    subtitle: {
+        text: 'Source: <a href="http://www.alphavantage.co/" target="_blank"> Alpha Vantage</a>',
+        style: {
+          color: '#0000FF'
+        }
+    },
+    xAxis: {
+          categories: xx,
+          tickInterval: 5
+    },
+    yAxis: [{
+        title: {
+            text: 'Stock Price'
+        },
+        min: 0,
+    },
+    {
+        floor: 0,
+        title: {
+            text: 'Volume'
+        },
+        labels: {
+            format: '{value}'
+        },
+        opposite: true
+    }
+    ],
+    legend: {
+      layout: 'horizontal',
+      align: 'center',
+      verticalAlign: 'bottom'
+    },
+    plotOptions: {
+        area: {
+            fillColor: {
+                linearGradient: {
+                    x1: 0,
+                    y1: 0,
+                    x2: 0,
+                    y2: 1
+                },
+                stops: [
+                    [0, Highcharts.Color('#0000ff').setOpacity(0.3).get('rgba')],
+                    [1, Highcharts.Color('#0000ff').setOpacity(0.3).get('rgba')]
+                ]
+            },
+            marker: {
+                radius: 0
+            },
+            lineWidth: 2,
+            states: {
+                hover: {
+                    lineWidth: 1
+                }
+            },
+            threshold: null
+        }
+    },
+    series: [{
+      type: 'area',
+      name: 'Price',
+      data: yy,
+      color: '#0000ff'
+    },
+    {
+      type: 'column',
+      name: 'Volume',
+      yAxis: 1,
+      data: yy2,
+      color: '#ff0000'
+    }]
+  });
+}
+
+function GetHighchartUrl(){
+  var exportUrl = 'http://export.highcharts.com/';
+  var optionsStr = JSON.stringify({
+     "xAxis": {
+         "categories": ["Jan", "Feb", "Mar"]
+     },
+         "series": [{
+         "data": [29.9, 71.5, 106.4]
+     }]
+  });
+  optionsStr = chartOpt[chartNum];
+  var dataString = encodeURI('async=true&type=jpeg&width=400&options=' + optionsStr);
+  $.ajax({
+      type: "POST",
+      data: dataString,
+      url: exportUrl,
+      success: function(data) {
+        FBstring = exportUrl + data
+        console.log(FBstring)
+      },
+      error: function(jqXHR) {
+      }
+  })
+}
+</script>
+</body>
+</html>

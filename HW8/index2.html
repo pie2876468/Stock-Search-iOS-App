@@ -1,0 +1,116 @@
+<html>
+<head>
+  <script src="https://code.highcharts.com/stock/highstock.js"></script>
+  <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+  <script src="http://code.highcharts.com/stock/highcharts-more.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+<div id='containerChart' style=' max-width: 1000px; max-height: 1000px; margin: 0 auto'></div>
+
+<script>
+
+var yyHistoricalPrice = [];
+
+function Begin(TargetSymbol) {
+  GetData(TargetSymbol)
+}
+
+function GetData(TargetSymbol) {
+  title = TargetSymbol;
+  $.ajax({
+      type: "GET",
+      url: "http://ec2-52-53-233-237.us-west-1.compute.amazonaws.com?inSymbol="+TargetSymbol+"&idx=stocktInfo2",
+      dataType: "json",
+      success: function(data) {
+          if (data.msg) {
+          }
+          else {
+            generateData_HistoricalChart(data);
+            if(yyHistoricalPrice) fillHistoricalChart();
+          }
+      },
+      error: function(jqXHR) {
+      }
+  })
+}
+
+function generateData_HistoricalChart(data){
+  var ii = 0;
+  if(typeof data["InfoTableHistorical"] !='undefined'
+  && typeof data["InfoTableHistorical"]["Time Series (Daily)"] !='undefined') {
+    for(var Target in data["InfoTableHistorical"]["Time Series (Daily)"]) {
+      if(ii<1000) {
+        var date = new Date(Target);
+        var timestamp0 = date.getTime();
+        if(typeof data["InfoTableHistorical"]["Time Series (Daily)"][Target] !='undefined'
+        && typeof data["InfoTableHistorical"]["Time Series (Daily)"][Target]["4. close"] !='undefined')
+          yyHistoricalPrice.push([timestamp0, parseFloat(data["InfoTableHistorical"]["Time Series (Daily)"][Target]["4. close"])]);
+        else {
+        }
+      }
+      ii++;
+      if(ii>1000) break;
+    }
+  }
+  else {
+  }
+  yyHistoricalPrice.reverse();
+}
+
+function fillHistoricalChart() {
+      // Create the chart
+      Highcharts.stockChart('containerChart', {
+            rangeSelector: {
+              buttons: [{
+                  type: 'month',
+                  count: 1,
+                  text: '1m'
+              }, {
+                  type: 'month',
+                  count: 3,
+                  text: '3m'
+              }, {
+                  type: 'month',
+                  count: 6,
+                  text: '6m'
+              }, {
+                  type: 'year',
+                  count: 1,
+                  text: '1y'
+              }, {
+                  type: 'all',
+                  text: 'All'
+              }],
+              selected: 0
+          },
+          title: {
+              text: title+' Stock Value'
+          },
+          subtitle: {
+              text: 'Source: <a href="http://www.alphavantage.co/"> Alpha Vantage</a>',
+              style: {
+                color: '#0000FF'
+              }
+          },
+          yAxis: [{
+              title: {
+                  text: 'Stock Value'
+              },
+              min: 0,
+          }],
+          series: [{
+              type: 'area',
+              name: title,
+              data: yyHistoricalPrice,
+              tooltip: {
+                  valueDecimals: 2
+              }
+          }]
+      });
+}
+
+
+</script>
+</body>
+</html>
